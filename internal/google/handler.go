@@ -2,20 +2,19 @@ package google
 
 import (
 	"fmt"
+	"net/http"
+
 	"iot/internal/google/calendar"
 	"iot/pkg/google"
-	"net/http"
 )
 
 type GoogleHandler struct {
 	CalendarService *calendar.CalendarService
 }
 
-func NewGoogleHandler(cg *google.CalendarGoogle) *GoogleHandler {
-	service := calendar.NewCalendarService(cg)
-
+func NewGoogleHandler(cg *google.CalendarGoogle, calendarService *calendar.CalendarService) *GoogleHandler {
 	return &GoogleHandler{
-		CalendarService: service,
+		CalendarService: calendarService,
 	}
 }
 

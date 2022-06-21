@@ -3,20 +3,26 @@ package calendar
 import (
 	"context"
 	"fmt"
+	"time"
+
+	"iot/internal/config"
 	"iot/pkg/automation"
 	"iot/pkg/google"
-	"time"
+	"iot/pkg/mqtt"
 )
 
 type CalendarService struct {
 	calendarGoogle    *google.CalendarGoogle
 	automationService *automation.AutomationService
+	mqttClient        *mqtt.MqttService
+	event             config.MqttEvent
 }
 
-func NewCalendarService(cg *google.CalendarGoogle) *CalendarService {
+func NewCalendarService(cg *google.CalendarGoogle, mqttClient *mqtt.MqttService, event config.MqttEvent) *CalendarService {
 	return &CalendarService{
 		calendarGoogle:    cg,
 		automationService: automation.NewAutomationService(),
+		mqttClient:        mqttClient,
 	}
 }
 
@@ -57,6 +63,9 @@ func (cs *CalendarService) GetEvent(ctx context.Context) {
 
 	if now.After(startTime) && now.Before(endTime) {
 		fmt.Println("Existe")
+
+		cs.mqttClient.Publish(cs.event.Calendar, event.Summary)
+
 		cs.powerOn(ctx)
 	} else {
 		cs.powerOff(ctx)

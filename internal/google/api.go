@@ -1,6 +1,7 @@
 package google
 
 import (
+	"iot/internal/google/calendar"
 	"iot/pkg/google"
 	"iot/pkg/middleware"
 	"net/http"
@@ -12,8 +13,9 @@ import (
 func NewGoogle(router *mux.Router,
 	middleware *middleware.Middleware,
 	calendarGoogle *google.CalendarGoogle,
+	calendarService *calendar.CalendarService,
 ) {
-	handler := NewGoogleHandler(calendarGoogle)
+	handler := NewGoogleHandler(calendarGoogle, calendarService)
 	SetRoutes(handler, router, middleware)
 }
 
